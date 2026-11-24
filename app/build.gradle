@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'pt.ipacediag'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "pt.hugovalverde.ipace"
+        minSdk 29
+        targetSdk 34
+        versionCode 10
+        versionName "1.9"
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    // O APK gerado leva a versão no nome: i-pace-v1.7-debug.apk
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "i-pace-v${variant.versionName}-${variant.buildType.name}.apk"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// Sem bibliotecas externas: só a API do Android.

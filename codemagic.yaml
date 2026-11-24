@@ -1,0 +1,21 @@
+workflows:
+  ipace-apk-debug:
+    name: i-Pace APK (debug, instalável)
+    max_build_duration: 60
+    environment:
+      java: 17
+    triggering:
+      events:
+        - push
+    scripts:
+      - name: Apontar o SDK do Android
+        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Compilar o APK de debug
+        script: ./gradlew assembleDebug
+    artifacts:
+      - app/build/outputs/**/*.apk
+    # Para receber o APK por email, descomente e ponha o SEU endereço:
+    # publishing:
+    #   email:
+    #     recipients:
+    #       - o.seu.email@exemplo.com

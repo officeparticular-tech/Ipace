@@ -1,0 +1,53 @@
+{
+  "format": 1,
+  "name": "Base I-Pace (de fábrica)",
+  "version": "2026.11.22",
+  "min_app": 2,
+  "dtcs": {
+    "B1DC5": "Aquecedor de alta tensão do líquido de refrigeração (HVCH) — ver ação de serviço H525"
+  },
+  "procedures": [
+    {
+      "id": "troca_12v_antes",
+      "title": "Troca das baterias 12V — ANTES",
+      "category": "12V",
+      "description": "Grava o estado do carro antes de desligar as baterias, para comparar depois e como prova.",
+      "available": true,
+      "verified": true,
+      "steps": [
+        {"type": "info", "text": "O I-Pace tem duas baterias de 12V: a principal (de arranque) e a auxiliar. Na arquitetura JLR, o sensor de monitorização (BMS) está no terminal negativo da bateria principal; a auxiliar não tem sensor. Por isso, normalmente só a troca da PRINCIPAL exige o registo da bateria nova (a confirmar para o I-Pace)."},
+        {"type": "voltage", "label": "Tensão 12V atual", "min": 11.8, "max": 15.5},
+        {"type": "dtc_scan"},
+        {"type": "save_report", "label": "antes_troca_12v"},
+        {"type": "info", "text": "Agora pode desligar o adaptador e fazer a troca. Use sempre baterias AGM com as mesmas características (Ah, CCA, medidas, terminais). Carro trancado e adormecido (~20 min), nunca tocar em cabos laranja. Desligar: negativo primeiro, depois positivo. Ligar: positivo primeiro, negativo no fim. Siga o manual TOPIx 414-01A para os binários de aperto. Guarde fatura e fotografias do rótulo da bateria."}
+      ]
+    },
+    {
+      "id": "troca_12v_depois",
+      "title": "Troca das baterias 12V — DEPOIS",
+      "category": "12V",
+      "description": "Verifica o carregamento das baterias novas, lê erros, faz o registo BMS (se disponível) e limpa erros causados pela troca, mantendo os de alta tensão.",
+      "available": true,
+      "verified": true,
+      "steps": [
+        {"type": "confirm", "label": "Carro ligado?", "text": "Ligue o carro em PRONTO A CONDUZIR (pé no travão + START) e espere 10 segundos.\n\nJá está ligado?", "required": true},
+        {"type": "voltage", "label": "12V com o carro ligado", "min": 13.2, "max": 15.2},
+        {"type": "dcdc", "seconds": 15},
+        {"type": "dtc_scan"},
+        {"type": "save_report", "label": "depois_troca_12v"},
+        {"type": "run", "target": "registo_bms"},
+        {"type": "clear_dtcs", "target": "all_except_hv", "text": "Desligar as baterias costuma deixar erros de comunicação e de tensão (U-códigos) em vários módulos. Apagar os erros destes módulos?"},
+        {"type": "info", "text": "Recomendado: esta noite faça o teste 4 (consumo durante a noite) no separador 12V, e repita a leitura de erros daqui a 2 dias."}
+      ]
+    },
+    {
+      "id": "registo_bms",
+      "title": "Registo da bateria principal nova (BMS)",
+      "category": "12V",
+      "available": false,
+      "verified": false,
+      "note": "O identificador da rotina de registo da bateria do I-Pace não é público. Para o obter: (1) peça a uma oficina que faça o registo com a máquina dela enquanto a app grava em Modo Escuta (precisa de um cabo OBD em Y); ou (2) aguarde um pacote de definições atualizado. Até lá, faça o registo numa oficina.",
+      "steps": []
+    }
+  ]
+}

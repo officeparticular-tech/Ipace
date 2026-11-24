@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "name": "Demonstração (simulado)",
+  "version": "demo",
+  "min_app": 2,
+  "procedures": [
+    {
+      "id": "registo_bms",
+      "title": "Registo da bateria principal nova (BMS) — SIMULADO",
+      "category": "12V",
+      "source": "Modo demonstração: rotina fictícia, só funciona no carro simulado",
+      "available": true,
+      "verified": false,
+      "vins": ["SADHA2B1XK1DEMO00"],
+      "steps": [
+        {"type": "uds", "tx": "726", "req": "1003", "expect": "5003", "label": "Sessão estendida no BCM"},
+        {"type": "uds", "tx": "726", "req": "3101DE40", "expect": "7101DE40", "label": "Rotina de registo da bateria (fictícia)"},
+        {"type": "uds", "tx": "726", "req": "1001", "expect": "5001", "label": "Voltar à sessão normal"}
+      ]
+    }
+  ]
+}

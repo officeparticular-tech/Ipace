@@ -1,0 +1,65 @@
+COMO FAZER O APK SEM ANDROID STUDIO (e a partir do telemóvel)
+=============================================================
+
+Não precisa do Android Studio. O projeto já traz o "Gradle wrapper",
+por isso compila com UM comando:  ./gradlew assembleDebug
+O resultado é:  app/build/outputs/apk/debug/app-debug.apk
+
+A ideia: um servidor na nuvem compila por si e dá-lhe o APK para
+descarregar no telemóvel. Já deixei a configuração pronta.
+
+
+OPÇÃO 1 — CODEMAGIC (recomendada; 500 min grátis/mês)
+-----------------------------------------------------
+1. Ponha o projeto numa conta GitHub (ver "Pôr o código no GitHub").
+2. Vá a codemagic.io → crie conta (Individual, grátis) → "Add application".
+3. Ligue o GitHub e escolha o repositório.
+4. O Codemagic deteta o ficheiro "codemagic.yaml" que já aqui está
+   (workflow "i-Pace APK (debug, instalável)"). Carregue em "Start build".
+5. No fim, descarregue o APK em "Artifacts". (Pode pôr o seu email no
+   codemagic.yaml para o receber automaticamente.)
+
+
+OPÇÃO 2 — GITHUB ACTIONS (grátis; ainda menos passos)
+-----------------------------------------------------
+Assim que o código estiver no GitHub, ele compila SOZINHO (há um
+workflow em .github/workflows/build.yml).
+- Abra o repositório → separador "Actions" → entre na execução mais
+  recente → secção "Artifacts" → descarregue "i-pace-apk-debug".
+- Se não arrancar sozinho: Actions → "Build APK" → "Run workflow".
+
+
+PÔR O CÓDIGO NO GITHUB (o único passo manual)
+---------------------------------------------
+- No telemóvel: em github.com crie um repositório novo (vazio).
+  Depois "Add file" → "Upload files" e envie os ficheiros do projeto.
+  (Dica: o telemóvel às vezes perde a estrutura de pastas ao enviar;
+  se puder, faça este envio uma vez a partir de qualquer PC — é rápido —
+  e daí para a frente faz tudo pelo telemóvel.)
+- Alternativa 100% telemóvel: use uma app de Git (ex.: "MGit") ou um
+  "Codespace" do próprio GitHub (botão Code → Codespaces) para enviar
+  a pasta com  git add . && git commit -m "app" && git push
+
+
+OPÇÃO 3 — COMPILAR NO PRÓPRIO TELEMÓVEL (Termux, sem nuvem)
+-----------------------------------------------------------
+Funciona, mas descarrega ~1 GB de SDK. Instale a app "Termux" (F-Droid) e:
+  pkg update && pkg install -y openjdk-17 wget unzip
+  cd ~ && unzip i-pace.zip -d ipace && cd ipace
+  mkdir -p android-sdk/cmdline-tools
+  (descarregue os "Command line tools" do Android em
+   developer.android.com/studio#command-line-tools-only, para android-sdk/cmdline-tools/latest)
+  export ANDROID_SDK_ROOT=$HOME/ipace/android-sdk
+  yes | android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+  echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+  ./gradlew assembleDebug
+O APK fica em app/build/outputs/apk/debug/.
+
+
+INSTALAR O APK
+--------------
+Ao abrir o APK, o Android pede para permitir "instalar apps desconhecidas"
+para a app onde o descarregou (ex.: o navegador). Autorize e instale.
+
+Nota: este é o APK "debug" — instala-se diretamente, não precisa de
+assinatura da Play Store. É o mesmo que já vinha fazendo no Android Studio.
