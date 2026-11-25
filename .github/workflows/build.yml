@@ -1,20 +1,20 @@
 name: Build APK
-on:
-  push:
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Descompactar o codigo do zip
+        run: unzip -o i-pace.zip
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
-      - name: Build debug APK
+      - name: Compilar
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: i-pace-apk-debug
