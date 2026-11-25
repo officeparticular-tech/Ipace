@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Descompactar o codigo
-        run: for z in *.zip; do unzip -o "$z"; done
+      - name: Descompactar a versao mais recente
+        run: unzip -o "$(ls i-pace-v*.zip | sort -V | tail -1)"
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
